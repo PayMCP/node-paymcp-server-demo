@@ -1,0 +1,39 @@
+{
+  "name": "node-paymcp-server-demo",
+  "version": "0.0.1",
+  "description": "Minimal MCP server demo with paymcp (Stripe/Walleot) that generates image via OpenAI and exposes a paid generate tool over Streamable HTTP.",
+  "main": "index.js",
+  "type": "module",
+  "bin": {
+    "mcp-image": "./build/index.js"
+  },
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc && chmod 755 build/index.js",
+    "start": "node build/index.js"
+  },
+  "files": [
+    "build"
+  ],
+  "keywords": [],
+  "author": "Blust AI",
+  "license": "MIT",
+  "packageManager": "pnpm@10.12.4",
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.16.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "openai": "^5.10.2",
+    "paymcp": "^0.0.5",
+    "sharp": "^0.34.3",
+    "zod": "3.23.4"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.1.0",
+    "dotenv": "^17.2.0",
+    "tsx": "^4.20.3",
+    "typescript": "^5.8.3"
+  }
+}
