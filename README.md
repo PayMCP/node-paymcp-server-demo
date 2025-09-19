@@ -125,7 +125,7 @@ http://localhost:5004/mcp
   4. Click **Add server** → select **Streamable HTTP** → set URL to `http://localhost:5004/mcp` → **Connect**.
   5. In the tools list, choose **generate**, provide a `prompt`, and run it to receive a base64 PNG.
 
-- **Demo client**: Try the companion chat client here: https://github.com/blustAI/walleot-demo-chat
+- **Demo client**: Try the companion chat client here: https://github.com/Walleot/walleot-demo-chat
 
 
 ---
