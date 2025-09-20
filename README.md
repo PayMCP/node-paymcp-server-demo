@@ -26,27 +26,117 @@ A minimal **Model Context Protocol (MCP)** server that exposes a single tool, `g
 ## Installation
 
 ```bash
-# clone the repo
-pnpm install
+# Install dependencies
+npm install
+
+# Build TypeScript
+npm run build
 ```
 
-> This project is TypeScript. Use your preferred runner (e.g., `tsx`, `ts-node`) when bootstrapping the server process if you create a custom entry point.
+### Dependencies
+
+#### Using Local SDK (Development)
+The project uses local paymcp-ts SDK by default (`file:../paymcp-ts`):
+```json
+// package.json
+"paymcp-ts": "file:../paymcp-ts"  // Local development
+```
+
+#### Using Published Package
+To use the published npm package instead:
+```json
+// package.json
+"paymcp-ts": "^0.1.0"  // From npm
+
+// Then reinstall
+npm install
+```
+
+#### Switching Between Local and Published
+```bash
+# Use local SDK (macOS/Linux)
+sed -i '' 's/"paymcp-ts": ".*"/"paymcp-ts": "file:..\/paymcp-ts"/' package.json
+npm install
+
+# Use npm package (macOS/Linux)
+sed -i '' 's/"paymcp-ts": ".*"/"paymcp-ts": "^0.1.0"/' package.json
+npm install
+
+# Or use the test suite helper script
+cd ../paymcp-test-suite
+./scripts/configure-sdk.sh local node    # Use local SDK
+./scripts/configure-sdk.sh remote node   # Use npm package
+```
+
+For Docker deployment, the path is automatically updated to `/app/paymcp-ts`.
 
 ---
 
 ## Configuration
 
-Set environment variables (for example via a `.env` that your runner loads, or via your shell):
+### Environment Variables
+Set environment variables (via `.env` file or shell):
 
 ```bash
 export OPENAI_API_KEY="sk-..."
-# Optional, if using Stripe
-export STRIPE_SECRET_KEY="sk_test_..."
-# Optional, if using Walleot (then uncomment provider in the server code)
-export WALLEOT_API_KEY="..."
+
+# Payment providers (set at least one):
+export WALLEOT_API_KEY="wlt_sk_test_..."     # Walleot (recommended for testing)
+export STRIPE_SECRET_KEY="sk_test_..."       # Stripe
+export PAYPAL_CLIENT_ID="..."                # PayPal
+export PAYPAL_CLIENT_SECRET="..."            # PayPal secret
+export SQUARE_ACCESS_TOKEN="..."             # Square
+export SQUARE_LOCATION_ID="..."              # Square location
+
+# Provider selection
+export PAYMENT_PROVIDER="walleot"  # Options: walleot, stripe, paypal, square
+export PAYMENT_FLOW="TWO_STEP"     # Options: TWO_STEP, ONE_STEP
+
+# Server configuration
+export PORT="5004"                  # Server port (default: 5004)
+export MCP_TRANSPORT="http"         # Transport mode
 ```
 
-Payment providers are configured in `installPayMCP` within the server code:
+### Provider Configuration (providers.json)
+The server uses `providers.json` to configure payment providers. Example:
+
+```json
+{
+  "default": "walleot",
+  "providers": {
+    "walleot": {
+      "type": "walleot",
+      "config": {
+        "api_key": "${WALLEOT_API_KEY}"
+      }
+    },
+    "stripe": {
+      "type": "stripe",
+      "config": {
+        "secret_key": "${STRIPE_SECRET_KEY}"
+      }
+    },
+    "paypal": {
+      "type": "paypal",
+      "config": {
+        "client_id": "${PAYPAL_CLIENT_ID}",
+        "client_secret": "${PAYPAL_CLIENT_SECRET}",
+        "mode": "sandbox"
+      }
+    },
+    "square": {
+      "type": "square",
+      "config": {
+        "access_token": "${SQUARE_ACCESS_TOKEN}",
+        "location_id": "${SQUARE_LOCATION_ID}",
+        "environment": "sandbox"
+      }
+    }
+  }
+}
+```
+
+Payment providers are also configured in `installPayMCP` within the server code:
 
 ```ts
 installPayMCP(server, {
@@ -57,6 +147,19 @@ installPayMCP(server, {
   paymentFlow: PaymentFlow.ELICITATION,
 });
 ```
+
+### Provider Notes
+- **Walleot**: Best for testing, supports small amounts, unified API
+- **Stripe**: Has minimum charge requirements (~$2.00), great for production
+- **PayPal**: Supports PayPal and Venmo payments
+- **Square**: Good for in-person and online payments
+
+### Getting API Keys
+- **OpenAI**: https://platform.openai.com/api-keys
+- **Walleot**: https://walleot.com (Sign up for test API key)
+- **Stripe**: https://dashboard.stripe.com/test/apikeys
+- **PayPal**: https://developer.paypal.com/dashboard
+- **Square**: https://developer.squareup.com/apps
 
 > **Payment notes:** Stripe has a minimum charge per transaction. If your tool price is below **$2.00**, prefer **Walleot**; small Stripe payments may fail or be uneconomical.
  
@@ -90,9 +193,36 @@ The tool returns a response like:
 
 ---
 
-## Running the server (HTTP / Streamable HTTP)
+## Running the server
 
-This server is already wired to run over HTTP using Express and the **StreamableHTTPServerTransport**.
+### Local Development
+```bash
+# Build and run (default port 5004)
+npm run build
+npm start
+
+# Or with custom port
+PORT=3000 npm start
+
+# Run in HTTP mode (for MCP Inspector)
+MCP_TRANSPORT=http npm start
+```
+
+### Using Docker
+The server is included in the PayMCP test suite Docker setup. See https://github.com/PayMCP/paymcp-test-suite for details.
+
+### MCP Inspector
+```bash
+# Run the server in HTTP mode
+MCP_TRANSPORT=http npm start
+
+# In another terminal, launch Inspector
+npx @modelcontextprotocol/inspector
+
+# Connect to http://localhost:5004/mcp
+```
+
+This server uses Express with **StreamableHTTPServerTransport** for HTTP communication.
 
 ### Using package scripts
 
