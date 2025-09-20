@@ -9,7 +9,7 @@
   },
   "scripts": {
     "dev": "tsx watch src/index.ts",
-    "build": "tsc && chmod 755 build/index.js",
+    "build": "tsc",
     "start": "node build/index.js"
   },
   "files": [
@@ -24,7 +24,7 @@
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "openai": "^5.10.2",
-    "paymcp": "^0.0.5",
+    "paymcp-ts": "^0.1.0",
     "sharp": "^0.34.3",
     "zod": "3.23.4"
   },
