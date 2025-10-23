@@ -5,7 +5,7 @@ import { StreamableHTTPServerTransport } from "@modelcontextprotocol/sdk/server/
 import { isInitializeRequest } from "@modelcontextprotocol/sdk/types.js"
 import cors from 'cors';
 // @ts-ignore - runWithSession exists but TypeScript module resolution is having issues
-import { runWithSession, VERSION, BUILD_HASH } from 'paymcp';
+import { runWithSession } from 'paymcp';
 
 import { getMCPServer } from "./mcpserver.js";
 
@@ -66,9 +66,8 @@ app.post('/mcp', async (req, res) => {
             const server = getMCPServer();
             await server.connect(transport);
 
-            // CRITICAL: Wrap in runWithSession for LIST_CHANGE flow per-session tool visibility
-            // WHY: AsyncLocalStorage.run() makes session ID available to getCurrentSession()
-            // inside PayMCP's tool filtering logic. Without this, multi-user LIST_CHANGE breaks.
+            // Handle initialize request
+            // CRITICAL: Wrap in runWithSession for session context propagation
             await runWithSession(newSessionId, async () => {
                 await transport.handleRequest(req, res, req.body);
             });
@@ -84,8 +83,8 @@ app.post('/mcp', async (req, res) => {
         }
 
         // Handle request with existing transport
-        // CRITICAL: Must wrap ALL request handling, not just initialize, for session context
-        await runWithSession(sessionId!, async () => {
+        // CRITICAL: Wrap in runWithSession to propagate session context via AsyncLocalStorage
+        await runWithSession(sessionId || randomUUID(), async () => {
             await transport.handleRequest(req, res, req.body);
         });
     } catch (err) {
@@ -113,7 +112,10 @@ app.get('/mcp', async (req, res) => {
 
     try {
         const transport = transports.get(sessionId)!;
-        await transport.handleRequest(req, res);
+        // CRITICAL: Wrap in runWithSession for session context propagation
+        await runWithSession(sessionId, async () => {
+            await transport.handleRequest(req, res);
+        });
     } catch (err) {
         console.error(`[ERROR] GET request failed:`, err);
         if (!res.headersSent) {
@@ -164,10 +166,6 @@ if (transportMode === 'stdio') {
 } else if (transportMode === 'http' || transportMode === 'streamable-http') {
     // HTTP transport mode (ENFORCED)
     const port = Number(process.env.PORT) || 5004;
-
-    // Log PayMCP version info on startup
-    console.log(`📦 PayMCP version: ${VERSION}`);
-    console.log(`🔨 PayMCP build hash: ${BUILD_HASH}`);
 
     const server = app.listen(port, '0.0.0.0', () => {
         console.log(`🚀 MCP server running at http://0.0.0.0:${port}/mcp (streamable-http transport)`);
