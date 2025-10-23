@@ -20,19 +20,21 @@
   "license": "MIT",
   "packageManager": "pnpm@10.12.4",
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.16.0",
+    "@modelcontextprotocol/sdk": "^1.18.2",
+    "axios": "^1.12.2",
+    "chalk": "^5.3.0",
     "cors": "^2.8.5",
+    "dotenv": "^17.2.0",
     "express": "^5.1.0",
     "openai": "^5.10.2",
-    "paymcp": "^0.0.5",
+    "paymcp": "file:../paymcp-ts",
     "sharp": "^0.34.3",
-    "zod": "3.23.4"
+    "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.3",
     "@types/node": "^24.1.0",
-    "dotenv": "^17.2.0",
     "tsx": "^4.20.3",
     "typescript": "^5.8.3"
   }
