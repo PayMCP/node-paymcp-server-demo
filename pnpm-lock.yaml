@@ -21,8 +21,8 @@ importers:
         specifier: ^5.10.2
         version: 5.10.2(zod@3.23.4)
       paymcp:
-        specifier: ^0.0.5
-        version: 0.0.5
+        specifier: ^0.4.2
+        version: 0.4.2
       sharp:
         specifier: ^0.34.3
         version: 0.34.3
@@ -649,8 +649,8 @@ packages:
     resolution: {integrity: sha512-TdrF7fW9Rphjq4RjrW0Kp2AW0Ahwu9sRGTkS6bvDi0SCwZlEZYmcfDbEsTz8RVk0EHIS/Vd1bv3JhG+1xZuAyQ==}
     engines: {node: '>=16'}
 
-  paymcp@0.0.5:
-    resolution: {integrity: sha512-jVBasoMUfrgeM4/ue/95iK5dQurJfTd80BQTBqNtXBB6JBGfBf/cZ87c1bod71xwb+ACtXNk7nRZbOPElDCm2A==}
+  paymcp@0.4.2:
+    resolution: {integrity: sha512-sByATr+uh4rvfIZbTFP3gnzhDR339rzgXcZdqJRcHLejMGu0QpvltAgxx2KnZh6sAX6M5zYzvtFRiWxUErsAIQ==}
     engines: {node: '>=18'}
 
   pkce-challenge@5.0.0:
@@ -1330,7 +1330,7 @@ snapshots:
 
   path-to-regexp@8.2.0: {}
 
-  paymcp@0.0.5:
+  paymcp@0.4.2:
     dependencies:
       zod: 3.23.4
 

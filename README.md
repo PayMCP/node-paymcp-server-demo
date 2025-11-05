@@ -54,7 +54,7 @@ installPayMCP(server, {
     // "walleot": { apiKey: process.env.WALLEOT_API_KEY ?? "" }, // Uncomment to enable Walleot
     "stripe": { apiKey: process.env.STRIPE_SECRET_KEY ?? "" },
   },
-  paymentFlow: PaymentFlow.ELICITATION,
+  mode: mode.ELICITATION,
 });
 ```
 

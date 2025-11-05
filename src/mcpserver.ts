@@ -1,7 +1,7 @@
 
 import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js";
 import { z } from "zod";
-import { installPayMCP, PaymentFlow } from 'paymcp';
+import { installPayMCP, Mode } from 'paymcp';
 import { generateImage } from "./services/openai.js";
 
 
@@ -21,7 +21,7 @@ export const getMCPServer = () => {
             //"walleot": { apiKey: process.env.WALLEOT_API_KEY ?? "" } //Uncomment to use walleot
             "stripe": { apiKey: process.env.STRIPE_SECRET_KEY ?? "" } 
         },
-        paymentFlow: PaymentFlow.ELICITATION,
+        mode: Mode.ELICITATION,
     });
 
     server.registerTool(
