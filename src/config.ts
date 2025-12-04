@@ -11,7 +11,7 @@ export interface ProviderConfig {
 
 export interface ProvidersConfig {
     activeProvider?: string;
-    activeFlow?: 'elicitation' | 'two_step' | 'progress';
+    activeFlow?: 'elicitation' | 'two_step' | 'progress' | 'dynamic_tools' | 'resubmit';
     availableFlows?: string[];
     availableProviders: {
         [name: string]: ProviderConfig;

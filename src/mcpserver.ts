@@ -13,7 +13,8 @@ enum PaymentFlow {
     TWO_STEP = "TWO_STEP",
     PROGRESS = "PROGRESS",
     OOB = "OOB",
-    DYNAMIC_TOOLS = "DYNAMIC_TOOLS"
+    DYNAMIC_TOOLS = "DYNAMIC_TOOLS",
+    RESUBMIT = "RESUBMIT"
 }
 
 export const getMCPServer = () => {
@@ -73,7 +74,8 @@ export const getMCPServer = () => {
         'elicitation': PaymentFlow.ELICITATION,
         'two_step': PaymentFlow.TWO_STEP,
         'progress': PaymentFlow.PROGRESS,
-        'dynamic_tools': PaymentFlow.DYNAMIC_TOOLS
+        'dynamic_tools': PaymentFlow.DYNAMIC_TOOLS,
+        'resubmit': PaymentFlow.RESUBMIT
     };
 
     const flow = flowMap[activeFlow] || PaymentFlow.TWO_STEP;

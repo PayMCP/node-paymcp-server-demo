@@ -1,11 +1,12 @@
 {
   "activeProvider": "mock",
-  "activeFlow": "list_change",
+  "activeFlow": "dynamic_tools",
   "availableFlows": [
     "elicitation",
     "two_step",
     "progress",
-    "list_change"
+    "dynamic_tools",
+    "resubmit"
   ],
   "availableProviders": {
     "mock": {
