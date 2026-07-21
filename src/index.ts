@@ -13,6 +13,10 @@ import { getMCPServer } from "./mcpserver.js";
 const app = express();
 app.use(express.json());
 
+app.get('/health', (_req, res) => {
+    res.status(200).json({ ok: true });
+});
+
 app.use(cors({
     origin: '*', // Configure appropriately for production, for example:
     // origin: ['https://your-remote-domain.com', 'https://your-other-remote-domain.com'],
@@ -104,7 +108,6 @@ server.on("error", (err) => {
     console.error("❌ Failed to start server:", err.message);
     process.exit(1);
 });
-
 
 
 
