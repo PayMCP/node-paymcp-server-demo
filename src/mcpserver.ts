@@ -18,8 +18,7 @@ export const getMCPServer = () => {
 
     installPayMCP(server, {
         providers: { 
-            //"walleot": { apiKey: process.env.WALLEOT_API_KEY ?? "" } //Uncomment to use walleot
-            "stripe": { apiKey: process.env.STRIPE_SECRET_KEY ?? "" } 
+            "walleot": { apiKey: process.env.WALLEOT_API_KEY ?? "" }
         },
         mode: Mode.ELICITATION,
     });
@@ -31,7 +30,7 @@ export const getMCPServer = () => {
             description: "Generates high-quality image and returns it as MCP resource",
             // @ts-ignore
             inputSchema: { prompt: z.string() } ,
-            price: {amount: 2, currency: "USD"}
+            price: {amount: 0.2, currency: "USD"}
         },
         async ({ prompt }, extra) => { //important to have 'extra' even if you don't use it in your logic
             const base64 = await generateImage(prompt);
